@@ -1,0 +1,61 @@
+pipeline {
+  environment {
+    imagename = "anubhavmohanty/calculator"
+    registryCredential = 'anubhav_dockerhub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git([url: 'https://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@github.com/anubhavm32/Mini_Spe_Calculator.git', branch: 'master', credentialsId: 'ecd51422-ec13-421f-b4fa-f507202db335'])
+
+      }
+    }
+    stage('Maven Build') {
+      steps{
+         sh "mvn install"
+      }
+    }
+    stage('Maven Test') {
+      steps{
+         sh "mvn test"
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+             dockerImage.push('latest')
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+         sh "docker rmi $imagename:latest"
+      }
+    }
+
+    stage("Invoke ansible playbook") {
+      steps{
+      ansiblePlaybook(
+      	credentialsId: "contnainer_access_key",
+        inventory: "inventory",
+        installation: "ansible",
+        limit: "",
+        playbook: "playbook.yaml",
+        extras: ""
+      )
+    }
+    }
+
+  }
+}

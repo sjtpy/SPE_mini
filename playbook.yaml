@@ -1,0 +1,15 @@
+- hosts: all
+  become: true
+  tasks:
+  
+    - name: Pull calculator docker image
+      community.docker.docker_image:
+        name: anubhavmohanty/calculator
+        source: pull
+
+    - name: Launch the calculator container
+      docker_container:
+        name: calculator
+        image: anubhavmohanty/calculator
+        state: started
+        
