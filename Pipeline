@@ -1,14 +1,14 @@
 pipeline {
   environment {
-    imagename = "anubhavmohanty/calculator"
-    registryCredential = 'anubhav_dockerhub'
+    imagename = "sjtpy/calculator"
+    registryCredential = 'sjtpy_dockerhub'
     dockerImage = ''
   }
   agent any
   stages {
     stage('Cloning Git') {
       steps {
-        git([url: 'https://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@github.com/anubhavm32/Mini_Spe_Calculator.git', branch: 'master', credentialsId: 'ecd51422-ec13-421f-b4fa-f507202db335'])
+        git([url: 'https://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@github.com/sjtpy/SPE_mini.git', branch: 'main', credentialsId: 'sjtpy_github'])
 
       }
     }
@@ -47,7 +47,7 @@ pipeline {
     stage("Invoke ansible playbook") {
       steps{
       ansiblePlaybook(
-      	credentialsId: "contnainer_access_key",
+      	credentialsId: "container_key",
         inventory: "inventory",
         installation: "ansible",
         limit: "",
