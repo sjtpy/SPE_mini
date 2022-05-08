@@ -1,32 +1,54 @@
-package com;
+package calc;
 
-import java.util.Scanner;
-import java.lang.Math;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 
-public class Calculator {
-
-    public double square_Root(double num)
+import java.util.Scanner;
+public class calc {
+    public double squareRoot(double num)
     {
         double output = 0;
         try{
             logger.info("Calculating Square root  of number " + num);
             if(num < 0){
                 output = Double.NaN;
-                throw new ArithmeticException("Case of NaN squareRoot of < 0");
+                throw new ArithmeticException("Invalid Input, Enter Number greater than 0");
             }
             else{
                 output = Math.sqrt(num);
             }
         }catch(ArithmeticException err){
-            logger.error("Number cannot be negative " + err.getMessage());
+            logger.error("Number cannot be smaller than 0. " + err.getMessage());
         }finally {
-            logger.info("Result of squareRoot is : " + output);
+            logger.info("Square Root is : " + output);
         }
 
         return output;
     }
+
+
+    public double naturalLog(double num) {
+        double output = 0;
+        try{
+            logger.info("Calculating Natural log of " + num);
+            if(num <= 0){
+                output = Double.NaN;
+                throw new ArithmeticException("Invalid Input, Enter Number greater than 0");
+            }
+            else{
+                output = Math.log(num);
+            }
+        }
+        catch(ArithmeticException err){
+            logger.error("Number cannot be less than 0. " + err.getMessage());
+        }
+        finally {
+            logger.info("Result of naturalLog is : " + output);
+        }
+        return output;
+    }
+
 
     public double fact(double num)
     {
@@ -34,12 +56,12 @@ public class Calculator {
         try{
             if(num < 0) {
                 output = Double.NaN;
-                throw new ArithmeticException("Case of NaN factorial if < 0");
+                throw new ArithmeticException("Invalid Input, Enter Number greater than 0");
             }
             if(num!=(int)num)
             {
                 output = Double.NaN;
-                throw new ArithmeticException("Case of NaN factorial if num is not an integer");
+                throw new ArithmeticException("Number not an integer");
             }
 
             if(num == 0 || num == 1) return 1;
@@ -49,35 +71,15 @@ public class Calculator {
             }
         }
         catch(ArithmeticException err) {
-            logger.error("Number cannot be negative " + err.getMessage());
+            logger.error("Number cannot be less than 0. " + err.getMessage());
         }
         finally {
-            logger.info("Result of factorial is: " + output);
+            logger.info("Factorial is : " + output);
         }
 
         return output;
     }
 
-    public double natural_Log(double num) {
-        double output = 0;
-        try{
-            logger.info("Calculating Natural log of " + num);
-            if(num <= 0){
-                output = Double.NaN;
-                throw new ArithmeticException("Case of NaN log of <= 0");
-            }
-            else{
-                output = Math.log(num);
-            }
-        }
-        catch(ArithmeticException err){
-            logger.error("Number cannot be negative " + err.getMessage());
-        }
-        finally {
-            logger.info("Result of naturalLog is : " + output);
-        }
-        return output;
-    }
 
     public double power(double num1, double num2)
     {
@@ -102,17 +104,18 @@ public class Calculator {
         return output;
     }
 
-    private static final Logger logger = LogManager.getLogger(Calculator.class);
+    private static final Logger logger = LogManager.getLogger(calc.class);
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         double num1, num2;
-        Calculator calculator = new Calculator();
+        calc calculator = new calc();
         Scanner scanner = new Scanner(System.in);
         char choice='y';
         do {
 
 
-            System.out.print("Enter an operator \n 1. sqrt \n 2. factorial \n 3. log \n 4. power ");
+            System.out.print("Enter an operator \n 1. Square Root \n 2. Factorial \n 3. Natural Log \n 4. Power  ");
             char operator = scanner.next().charAt(0);
             //scanner.close();
             double output=0.0;
@@ -122,7 +125,7 @@ public class Calculator {
                     System.out.print("Enter first number:");
                     num1 = scanner.nextDouble();
                     try {
-                        output = calculator.square_Root(num1)   ;
+                        output = calculator.squareRoot(num1)   ;
                     }catch (Exception e)
                     {
                         System.out.println(e);
@@ -147,7 +150,7 @@ public class Calculator {
                     System.out.print("Enter first number:");
                     num1 = scanner.nextDouble();
                     try {
-                        output = calculator.natural_Log(num1);
+                        output = calculator.naturalLog( num1);
                     }catch (Exception e)
                     {
                         System.out.println(e);
